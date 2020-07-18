@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css">
+        <title>{{ gallery_name }}</title>
+    </head>
+    <body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        $(function() {
+            $('[data-fancybox="gallery"]').fancybox({
+                video: {
+                    autoStart: false
+                },
+                buttons: [ "zoom", "slideShow", "close" ],
+            });
+            
+        });
+        </script>
+        <div class="container">
+            <h1>{{ gallery_name }}</h1>
+            <list>
+            {% for dir in dirs %}
+                <li><a href="/{{ dir }}">{{ dir.name }}</a></li>
+            {% endfor %}
+            </list>
+            <div class="row my-5">
+                {% for file in files %}
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                    <a href="/pics/{{ file.file }}" data-fancybox="gallery">
+                        {% if file.thumb %}
+                            <img src="/pics/{{ file.thumb }}" class="img-thumbnail"/>
+                        {% else %}
+                            {% if file.type %}[{{file.type}}] - {% endif %}{{ file.file }}
+                        {% endif %}
+                    </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+</html>
