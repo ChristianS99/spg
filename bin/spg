@@ -16,7 +16,7 @@ args = parser.parse_args()
 root = Path(args.root) if args.root else Path().absolute()
 
 app = web.Application()
-aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader(Path(__file__).parent / 'templates'))
+aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader('spg', 'templates'))
 
 # https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
 imagetypes =  ['image/apng', 'image/bmp', 'image/gif', 'image/x-icon', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp']
