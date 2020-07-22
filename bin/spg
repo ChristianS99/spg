@@ -9,10 +9,11 @@ import magic
 
 parser = ArgumentParser('Serve some folder as image/video gallery')
 parser.add_argument('root', nargs='?', help='location, where files should be served from')
-parser.add_argument('--host')
+parser.add_argument('--host', default='localhost')
 parser.add_argument('--port', '-p', type=int)
 
 args = parser.parse_args()
+# current working directory if root is not set
 root = Path(args.root) if args.root else Path().absolute()
 
 app = web.Application()
@@ -46,9 +47,9 @@ async def handle(request):
         #else:
         #    print(magic.from_file(str(item), mime=True))
         elif magic.from_file(str(item), mime=True) in imagetypes:
-            files.append({ 'file': rel_item, 'thumb': rel_item, 'type': 'Image' })
-        elif magic.from_file(str(item), mime=True) in imagetypes + videotypes:
-            files.append({ 'file': rel_item, 'thumb': None, 'type': 'Video' })
+            files.append({'file': rel_item, 'thumb': rel_item, 'type': 'Image'})
+        elif magic.from_file(str(item), mime=True) in videotypes:
+            files.append({'file': rel_item, 'thumb': None, 'type': 'Video'})
     return {'dirs': dirs, 'files': files, 'gallery_name': gallery_name}
 
 app.add_routes([
