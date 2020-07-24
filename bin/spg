@@ -14,7 +14,7 @@ parser.add_argument('--port', '-p', type=int)
 
 args = parser.parse_args()
 # current working directory if root is not set
-root = Path(args.root) if args.root else Path().absolute()
+root = Path(args.root).absolute() if args.root else Path().absolute()
 
 app = web.Application()
 aiohttp_jinja2.setup(app, loader=jinja2.PackageLoader('spg', 'templates'))
@@ -28,7 +28,11 @@ videotypes = ['video/mp4']
 async def handle(request):
     path = request.match_info.get('path', '')
     is_root = path == ''
-    my_path = Path(root / path)
+    my_path = (root / path).resolve()
+    try:
+        my_path.relative_to(root)
+    except ValueError as e:
+        return web.Response(text='not allowed', status=403)
     gallery_name = my_path.name
     try:
         dir_items = my_path.iterdir()
@@ -53,7 +57,7 @@ async def handle(request):
     return {'dirs': dirs, 'files': files, 'gallery_name': gallery_name}
 
 app.add_routes([
-    web.static('/pics', root), 
+    web.static('/pics', root),
 ])
 app.add_routes([web.get('/{path:.*}', handle)])
 
